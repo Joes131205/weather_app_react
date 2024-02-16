@@ -14,10 +14,9 @@ function WeatherApp() {
         console.log(city);
         const response = await fetch();
         const data = await response.json();
-        
     }
     return (
-        <div className="w-screen h-screen flex flex-col justify-center text-center items-center gap-10">
+        <div className="w-screen h-screen flex flex-col justify-center text-center items-center gap-10 bg-black text-white">
             <h1>Weather App</h1>
             <form
                 className="flex gap-20 items-center justify-center"
