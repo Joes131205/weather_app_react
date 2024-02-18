@@ -1,6 +1,267 @@
 import { useState } from "react";
 import Info from "./Info.jsx";
 const api_key = import.meta.env.VITE_REACT_APP_WEATHER_API_KEY;
+const backgroundGroup = {
+    Thunderstorm: {
+        desktop: `bg-[url("../public/images/desktop/thunder_storm.png")]`,
+        mobile: `bg-[url("../public/images/mobile/thunder_storm.png")]`,
+    },
+    "Shower Rain": {
+        desktop: `bg-[url("../public/images/desktop/shower_rain.png")]`,
+        mobile: `bg-[url("../public/images/mobile/shower_rain.png")]`,
+    },
+    "Clear Sky": {
+        desktop: `bg-[url("../public/images/desktop/clear_sky.png")]`,
+        mobile: `bg-[url("../public/images/mobile/clear_sky.png")]`,
+    },
+    "Few Clouds": {
+        desktop: `bg-[url("../public/images/desktop/few_clouds.png")]`,
+        mobile: `bg-[url("../public/images/mobile/few_clouds.png")]`,
+    },
+    "Scattered Clouds": {
+        desktop: `bg-[url("../public/images/desktop/scattered_clouds.png")]`,
+        mobile: `bg-[url("../public/images/mobile/scattered_clouds.png")]`,
+    },
+    "Broken Clouds": {
+        desktop: `bg-[url("../public/images/desktop/broken_clouds.png")]`,
+        mobile: `bg-[url("../public/images/mobile/broken_clouds.png")]`,
+    },
+    Rain: {
+        desktop: `bg-[url("../public/images/desktop/rain.png")]`,
+        mobile: `bg-[url("../public/images/mobile/rain.png")]`,
+    },
+    Snow: {
+        desktop: `bg-[url("../public/images/desktop/snow.png")]`,
+        mobile: `bg-[url("../public/images/mobile/snow.png")]`,
+    },
+    Mist: {
+        desktop: `bg-[url("../public/images/desktop/mist.png")]`,
+        mobile: `bg-[url("../public/images/mobile/mist.png")]`,
+    },
+};
+
+const group = {
+    200: {
+        description: "thunderstorm with light rain",
+        background: backgroundGroup.Thunderstorm,
+    },
+    201: {
+        description: "thunderstorm with rain",
+        background: backgroundGroup.Thunderstorm,
+    },
+    202: {
+        description: "thunderstorm with heavy rain",
+        background: backgroundGroup.Thunderstorm,
+    },
+    210: {
+        description: "light thunderstorm",
+        background: backgroundGroup.Thunderstorm,
+    },
+    211: {
+        description: "thunderstorm",
+        background: backgroundGroup.Thunderstorm,
+    },
+    212: {
+        description: "heavy thunderstorm",
+        background: backgroundGroup.Thunderstorm,
+    },
+    221: {
+        description: "ragged thunderstorm",
+        background: backgroundGroup.Thunderstorm,
+    },
+    230: {
+        description: "thunderstorm with light drizzle",
+        background: backgroundGroup.Thunderstorm,
+    },
+    231: {
+        description: "thunderstorm with drizzle",
+        background: backgroundGroup.Thunderstorm,
+    },
+    232: {
+        description: "thunderstorm with heavy drizzle",
+        background: backgroundGroup.Thunderstorm,
+    },
+    300: {
+        description: "light intensity drizzle",
+        background: backgroundGroup["Shower Rain"],
+    },
+    301: {
+        description: "drizzle",
+        background: backgroundGroup["Shower Rain"],
+    },
+    302: {
+        description: "heavy intensity drizzle",
+        background: backgroundGroup["Shower Rain"],
+    },
+    310: {
+        description: "light intensity drizzle rain",
+        background: backgroundGroup["Shower Rain"],
+    },
+    311: {
+        description: "drizzle rain",
+        background: backgroundGroup["Shower Rain"],
+    },
+    312: {
+        description: "heavy intensity drizzle rain",
+        background: backgroundGroup["Shower Rain"],
+    },
+    313: {
+        description: "shower rain and drizzle",
+        background: backgroundGroup["Shower Rain"],
+    },
+    314: {
+        description: "heavy shower rain and drizzle",
+        background: backgroundGroup["Shower Rain"],
+    },
+    321: {
+        description: "shower drizzle",
+        background: backgroundGroup["Shower Rain"],
+    },
+    500: {
+        description: "light rain",
+        background: backgroundGroup.Rain,
+    },
+    501: {
+        description: "moderate rain",
+        background: backgroundGroup.Rain,
+    },
+    502: {
+        description: "heavy intensity rain",
+        background: backgroundGroup.Rain,
+    },
+    503: {
+        description: "very heavy rain",
+        background: backgroundGroup.Rain,
+    },
+    504: {
+        description: "extreme rain",
+        background: backgroundGroup.Rain,
+    },
+    511: {
+        description: "freezing rain",
+        background: backgroundGroup.Snow,
+    },
+    520: {
+        description: "light intensity shower rain",
+        background: backgroundGroup["Shower Rain"],
+    },
+    521: {
+        description: "shower rain",
+        background: backgroundGroup["Shower Rain"],
+    },
+    522: {
+        description: "heavy intensity shower rain",
+        background: backgroundGroup["Shower Rain"],
+    },
+    531: {
+        description: "ragged shower rain",
+        background: backgroundGroup["Shower Rain"],
+    },
+    600: {
+        description: "light snow",
+        background: backgroundGroup.Snow,
+    },
+    601: {
+        description: "snow",
+        background: backgroundGroup.Snow,
+    },
+    602: {
+        description: "heavy snow",
+        background: backgroundGroup.Snow,
+    },
+    611: {
+        description: "sleet",
+        background: backgroundGroup.Snow,
+    },
+    612: {
+        description: "light shower sleet",
+        background: backgroundGroup.Snow,
+    },
+    613: {
+        description: "shower sleet",
+        background: backgroundGroup.Snow,
+    },
+    615: {
+        description: "light rain and snow",
+        background: backgroundGroup.Snow,
+    },
+    616: {
+        description: "rain and snow",
+        background: backgroundGroup.Snow,
+    },
+    620: {
+        description: "light shower snow",
+        background: backgroundGroup.Snow,
+    },
+    621: {
+        description: "shower snow",
+        background: backgroundGroup.Snow,
+    },
+    622: {
+        description: "heavy shower snow",
+        background: backgroundGroup.Snow,
+    },
+    701: {
+        description: "mist",
+        background: backgroundGroup.Mist,
+    },
+    711: {
+        description: "smoke",
+        background: backgroundGroup.Mist,
+    },
+    721: {
+        description: "haze",
+        background: backgroundGroup.Mist,
+    },
+    731: {
+        description: "sand/dust whirls",
+        background: backgroundGroup.Mist,
+    },
+    741: {
+        description: "fog",
+        background: backgroundGroup.Mist,
+    },
+    751: {
+        description: "sand",
+        background: backgroundGroup.Mist,
+    },
+    761: {
+        description: "dust",
+        background: backgroundGroup.Mist,
+    },
+    762: {
+        description: "volcanic ash",
+        background: backgroundGroup.Mist,
+    },
+    771: {
+        description: "squalls",
+        background: backgroundGroup.Mist,
+    },
+    781: {
+        description: "tornado",
+        background: backgroundGroup.Mist,
+    },
+    800: {
+        description: "clear sky",
+        background: backgroundGroup["Clear Sky"],
+    },
+    801: {
+        description: "few clouds: 11-25%",
+        background: backgroundGroup["Few Clouds"],
+    },
+    802: {
+        description: "scattered clouds: 25-50%",
+        background: backgroundGroup["Scattered Clouds"],
+    },
+    803: {
+        description: "broken clouds: 51-84%",
+        background: backgroundGroup["Broken Clouds"],
+    },
+    804: {
+        description: "overcast clouds: 85-100%",
+        background: backgroundGroup["Broken Clouds"],
+    },
+};
 
 function WeatherApp() {
     const [city, setCity] = useState("");
@@ -20,8 +281,8 @@ function WeatherApp() {
             lat: data[0].lat,
             lon: data[0].lon,
         };
+        console.log(data);
         setCoor(currCoor);
-        console.log(coor);
     }
     async function getWeatherInfo() {
         const response = await fetch(
@@ -29,25 +290,39 @@ function WeatherApp() {
         );
         const data = await response.json();
         const { temp, feels_like, humidity } = data.main;
-        const { main: weather, description, icon: img } = data.weather[0];
-        setWeatherInfo({
+        const { id, main: weather, description, icon: img } = data.weather[0];
+        setWeatherInfo((prev) => ({
+            id,
             temp,
             feels_like,
             humidity,
             weather,
             description,
             img,
-        });
-        console.log(weatherInfo);
+        }));
     }
     async function handleSubmit(e) {
         e.preventDefault();
-        getCoor();
-        getWeatherInfo();
+        await getCoor();
+        await getWeatherInfo();
+        console.log(weatherInfo);
     }
+    let background = `
+    ${
+        weatherInfo.id
+            ? `${group[weatherInfo.id].background.mobile}`
+            : `bg-white`
+    } 
+     ${
+         weatherInfo.id
+             ? `${group[weatherInfo.id].background.desktop}`
+             : `bg-white`
+     } bg-cover`;
     return (
-        <div className="w-screen h-screen flex flex-col justify-center text-center items-center gap-10 bg-black text-white">
-            <h1>Weather App</h1>
+        <div
+            className={`transition w-screen h-screen flex flex-col justify-center text-center text-black items-center gap-10 bg-cover ${background}`}
+        >
+            <h1 className="font-bold text-2xl">Weather App</h1>
             <form
                 className="flex gap-20 items-center justify-center"
                 onSubmit={handleSubmit}
@@ -64,7 +339,19 @@ function WeatherApp() {
                     className="px-20 py-5 border-5 text-xl "
                 />
             </form>
-            <Info />
+            <Info
+                key={weatherInfo.id ?? 1}
+                temp={weatherInfo.temp ?? "-"}
+                feels_like={weatherInfo.feels_like ?? "-"}
+                humidity={weatherInfo.humidity ?? "-"}
+                weather={weatherInfo.weather ?? "-"}
+                description={weatherInfo.description ?? "-"}
+                img={
+                    weatherInfo.img
+                        ? `https://openweathermap.org/img/wn/${weatherInfo.img}@2x.png`
+                        : "../public/images/placeholder.png"
+                }
+            />
         </div>
     );
 }
