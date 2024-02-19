@@ -3,39 +3,39 @@ import Info from "./Info.jsx";
 const api_key = import.meta.env.VITE_REACT_APP_WEATHER_API_KEY;
 const backgroundGroup = {
     Thunderstorm: {
-        desktop: `bg-[url("../public/images/desktop/thunder_storm.png")]`,
+        desktop: `md:bg-[url("../public/images/desktop/thunder_storm.png")]`,
         mobile: `bg-[url("../public/images/mobile/thunder_storm.png")]`,
     },
     "Shower Rain": {
-        desktop: `bg-[url("../public/images/desktop/shower_rain.png")]`,
+        desktop: `md:bg-[url("../public/images/desktop/shower_rain.png")]`,
         mobile: `bg-[url("../public/images/mobile/shower_rain.png")]`,
     },
     "Clear Sky": {
-        desktop: `bg-[url("../public/images/desktop/clear_sky.png")]`,
+        desktop: `md:bg-[url("../public/images/desktop/clear_sky.png")]`,
         mobile: `bg-[url("../public/images/mobile/clear_sky.png")]`,
     },
     "Few Clouds": {
-        desktop: `bg-[url("../public/images/desktop/few_clouds.png")]`,
+        desktop: `md:bg-[url("../public/images/desktop/few_clouds.png")]`,
         mobile: `bg-[url("../public/images/mobile/few_clouds.png")]`,
     },
     "Scattered Clouds": {
-        desktop: `bg-[url("../public/images/desktop/scattered_clouds.png")]`,
+        desktop: `md:bg-[url("../public/images/desktop/scattered_clouds.png")]`,
         mobile: `bg-[url("../public/images/mobile/scattered_clouds.png")]`,
     },
     "Broken Clouds": {
-        desktop: `bg-[url("../public/images/desktop/broken_clouds.png")]`,
+        desktop: `md:bg-[url("../public/images/desktop/broken_clouds.png")]`,
         mobile: `bg-[url("../public/images/mobile/broken_clouds.png")]`,
     },
     Rain: {
-        desktop: `bg-[url("../public/images/desktop/rain.png")]`,
+        desktop: `md:bg-[url("../public/images/desktop/rain.png")]`,
         mobile: `bg-[url("../public/images/mobile/rain.png")]`,
     },
     Snow: {
-        desktop: `bg-[url("../public/images/desktop/snow.png")]`,
+        desktop: `md:bg-[url("../public/images/desktop/snow.png")]`,
         mobile: `bg-[url("../public/images/mobile/snow.png")]`,
     },
     Mist: {
-        desktop: `bg-[url("../public/images/desktop/mist.png")]`,
+        desktop: `md:bg-[url("../public/images/desktop/mist.png")]`,
         mobile: `bg-[url("../public/images/mobile/mist.png")]`,
     },
 };
@@ -270,7 +270,6 @@ function WeatherApp() {
     function handleChange(e) {
         const value = e.target.value;
         setCity(value);
-        console.log(city);
     }
     async function getCoor() {
         const response = await fetch(
@@ -281,7 +280,6 @@ function WeatherApp() {
             lat: data[0].lat,
             lon: data[0].lon,
         };
-        console.log(data);
         setCoor(currCoor);
     }
     async function getWeatherInfo() {
@@ -291,6 +289,8 @@ function WeatherApp() {
         const data = await response.json();
         const { temp, feels_like, humidity } = data.main;
         const { id, main: weather, description, icon: img } = data.weather[0];
+        const name = data.name;
+        const country = data.sys.country;
         setWeatherInfo((prev) => ({
             id,
             temp,
@@ -299,48 +299,49 @@ function WeatherApp() {
             weather,
             description,
             img,
+            name,
+            country,
         }));
     }
     async function handleSubmit(e) {
         e.preventDefault();
         await getCoor();
         await getWeatherInfo();
-        console.log(weatherInfo);
     }
-    let background = `
-    ${
+    const background = `${
         weatherInfo.id
             ? `${group[weatherInfo.id].background.mobile}`
             : `bg-white`
-    } 
-     ${
-         weatherInfo.id
-             ? `${group[weatherInfo.id].background.desktop}`
-             : `bg-white`
-     } bg-cover`;
+    } ${
+        weatherInfo.id
+            ? `${group[weatherInfo.id].background.desktop}`
+            : `bg-white`
+    } bg-cover`;
     return (
         <div
-            className={`transition w-screen h-screen flex flex-col justify-center text-center text-black items-center gap-10 bg-cover ${background}`}
+            className={` w-screen h-screen flex flex-col justify-center text-center text-black items-center gap-20 ${background}`}
         >
-            <h1 className="font-bold text-2xl">Weather App</h1>
+            <h1 className="font-bold text-4xl md:text-5xl">Weather App</h1>
             <form
-                className="flex gap-20 items-center justify-center"
+                className="flex gap-10 items-center justify-center flex-col md:flex-row"
                 onSubmit={handleSubmit}
             >
                 <input
                     type="text"
                     name="city"
+                    placeholder="City..."
+                    autoComplete="off"
                     onChange={handleChange}
-                    className="px-5 py-1 border text-black"
+                    className="transition px-5 py-1 border-2 bg-white border-black text-black rounded-xl focus:scale-105 outline-transparent"
                 />
                 <input
                     type="submit"
                     value="Submit"
-                    className="px-20 py-5 border-5 text-xl "
+                    className="px-10 py-1 border-2 border-black bg-white rounded-xl font-bold cursor-pointer hover:scale-110 transition hover:bg-gray-100"
                 />
             </form>
             <Info
-                key={weatherInfo.id ?? 1}
+                id={weatherInfo.id ?? 1}
                 temp={weatherInfo.temp ?? "-"}
                 feels_like={weatherInfo.feels_like ?? "-"}
                 humidity={weatherInfo.humidity ?? "-"}
@@ -351,6 +352,8 @@ function WeatherApp() {
                         ? `https://openweathermap.org/img/wn/${weatherInfo.img}@2x.png`
                         : "../public/images/placeholder.png"
                 }
+                name={weatherInfo.name ?? "-"}
+                country={weatherInfo.country ?? "-"}
             />
         </div>
     );
